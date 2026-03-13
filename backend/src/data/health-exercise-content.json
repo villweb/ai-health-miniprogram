@@ -1,0 +1,136 @@
+{
+  "board_code": "health_exercise",
+  "title": "健康养生操",
+  "type": "video",
+  "content": {
+    "videos": [
+      {
+        "title": "八段锦",
+        "description": "传统养生功法，八个动作调理全身",
+        "url": "https://example.com/baduanjin.mp4",
+        "duration": 900,
+        "durationText": "15:00",
+        "thumbnail": "/images/baduanjin.jpg",
+        "tips": [
+          "两手托天理三焦",
+          "左右开弓似射雕",
+          "调理脾胃须单举",
+          "五劳七伤往后瞧",
+          "摇头摆尾去心火",
+          "两手攀足固肾腰",
+          "攒拳怒目增气力",
+          "背后七颠百病消"
+        ]
+      },
+      {
+        "title": "五禽戏",
+        "description": "模仿虎、鹿、熊、猿、鸟五种动物的动作",
+        "url": "https://example.com/wuqinxi.mp4",
+        "duration": 1200,
+        "durationText": "20:00",
+        "thumbnail": "/images/wuqinxi.jpg",
+        "tips": [
+          "虎戏：威猛刚劲，舒展筋骨",
+          "鹿戏：安闲雅静，舒缓筋脉",
+          "熊戏：沉稳浑厚，强腰固肾",
+          "猿戏：敏捷灵活，健脑益智",
+          "鸟戏：轻盈飘逸，调达气血"
+        ]
+      },
+      {
+        "title": "太极拳",
+        "description": "以柔克刚，阴阳相济的传统武术",
+        "url": "https://example.com/taiji.mp4",
+        "duration": 1500,
+        "durationText": "25:00",
+        "thumbnail": "/images/taiji.jpg",
+        "tips": [
+          "动作缓慢柔和",
+          "呼吸自然深长",
+          "意念集中",
+          "虚实分明",
+          "上下相随"
+        ]
+      },
+      {
+        "title": "六字诀",
+        "description": "通过六个字的发音调理五脏六腑",
+        "url": "https://example.com/liuzijue.mp4",
+        "duration": 600,
+        "durationText": "10:00",
+        "thumbnail": "/images/liuzijue.jpg",
+        "tips": [
+          "嘘（xū）字养肝",
+          "呵（hē）字补心",
+          "呼（hū）字健脾",
+          "呬（sī）字润肺",
+          "吹（chuī）字补肾",
+          "嘻（xī）字理三焦"
+        ]
+      },
+      {
+        "title": "易筋经",
+        "description": "强筋健骨，易筋洗髓的传统功法",
+        "url": "https://example.com/yijinjing.mp4",
+        "duration": 1800,
+        "durationText": "30:00",
+        "thumbnail": "/images/yijinjing.jpg",
+        "tips": [
+          "韦驮献杵第一式",
+          "韦驮献杵第二式",
+          "韦驮献杵第三式",
+          "摘星换斗式",
+          "倒拽九牛尾式",
+          "出爪亮翅式",
+          "九鬼拔马刀式",
+          "三盘落地式"
+        ]
+      },
+      {
+        "title": "颈椎保健操",
+        "description": "缓解颈椎疲劳，预防颈椎病",
+        "url": "https://example.com/jingzhuai.mp4",
+        "duration": 300,
+        "durationText": "05:00",
+        "thumbnail": "/images/jingzhuai.jpg",
+        "tips": [
+          "左右转头",
+          "前后点头",
+          "左右侧屈",
+          "旋转颈部",
+          "耸肩运动"
+        ]
+      },
+      {
+        "title": "腰椎保健操",
+        "description": "缓解腰部疲劳，预防腰椎疾病",
+        "url": "https://example.com/yaozhui.mp4",
+        "duration": 300,
+        "durationText": "05:00",
+        "thumbnail": "/images/yaozhui.jpg",
+        "tips": [
+          "腰部旋转",
+          "前后弯腰",
+          "左右侧屈",
+          "腰部扭转",
+          "拱桥运动"
+        ]
+      },
+      {
+        "title": "眼部保健操",
+        "description": "缓解眼疲劳，保护视力",
+        "url": "https://example.com/yanbu.mp4",
+        "duration": 240,
+        "durationText": "04:00",
+        "thumbnail": "/images/yanbu.jpg",
+        "tips": [
+          "按揉攒竹穴",
+          "按压睛明穴",
+          "按揉四白穴",
+          "按揉太阳穴",
+          "眼保健操结束"
+        ]
+      }
+    ]
+  }
+}

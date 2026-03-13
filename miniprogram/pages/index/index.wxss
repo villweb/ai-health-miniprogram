@@ -1,0 +1,172 @@
+/* pages/index/index.wxss - 修复版 */
+
+.container {
+  padding: 0;
+  padding-bottom: 20rpx;
+}
+
+/* 顶部欢迎区 */
+.header {
+  position: relative;
+  height: 300rpx;
+  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+  overflow: hidden;
+  padding: 60rpx 40rpx;
+  box-sizing: border-box;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 快速咨询 */
+.quick-chat {
+  margin: -40rpx 20rpx 20rpx;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quick-chat-left {
+  display: flex;
+  align-items: center;
+}
+
+.quick-chat-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 20rpx;
+  font-size: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-chat-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-chat-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.quick-chat-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.arrow {
+  font-size: 48rpx;
+  color: #ccc;
+  font-weight: 300;
+}
+
+/* 功能板块 */
+.section {
+  margin: 30rpx 20rpx;
+}
+
+.section-header {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.boards {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.board-icon {
+  width: 100rpx;
+  height: 100rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+  font-size: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 12rpx;
+}
+
+.board-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.board-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.board-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 热门问题 */
+.hot-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.question-tag {
+  background-color: #fff;
+  padding: 16rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+  border: 1rpx solid #e0e0e0;
+}
+
+.question-tag:active {
+  background-color: #f5f5f5;
+}
+
+/* 底部声明 */
+.footer {
+  margin-top: 60rpx;
+  padding: 40rpx 20rpx;
+  text-align: center;
+}
+
+.disclaimer {
+  font-size: 24rpx;
+  color: #999;
+}

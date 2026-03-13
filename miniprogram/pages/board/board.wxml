@@ -1,0 +1,78 @@
+<!--pages/board/board.wxml-->
+<view class="container">
+  <!-- 板块头部 -->
+  <view class="board-header">
+    <image src="{{board.icon}}" class="board-icon" mode="aspectFit"></image>
+    <text class="board-title">{{board.title}}</text>
+    <text class="board-desc">{{board.description}}</text>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="board-content">
+    <!-- QA 类型 -->
+    <view wx:if="{{board.type === 'qa'}}" class="qa-list">
+      <view 
+        class="qa-item card" 
+        wx:for="{{qaList}}" 
+        wx:key="title"
+      >
+        <view class="qa-title" bindtap="toggleQA" data-index="{{index}}">
+          <text class="qa-title-text">{{item.title}}</text>
+          <text class="qa-arrow {{item.expanded ? 'expanded' : ''}}">›</text>
+        </view>
+        <view class="qa-answer {{item.expanded ? 'show' : ''}}">
+          <text>{{item.answer}}</text>
+          <view class="qa-images" wx:if="{{item.images.length > 0}}">
+            <image 
+              wx:for="{{item.images}}" 
+              wx:for-item="img"
+              wx:key="index"
+              src="{{img}}" 
+              class="qa-image"
+              mode="widthFix"
+            ></image>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Video 类型 -->
+    <view wx:if="{{board.type === 'video'}}" class="video-list">
+      <view 
+        class="video-item card" 
+        wx:for="{{videoList}}" 
+        wx:key="title"
+        bindtap="playVideo"
+        data-url="{{item.url}}"
+      >
+        <view class="video-cover">
+          <image src="/images/video-cover.png" class="cover-image"></image>
+          <view class="play-icon">▶</view>
+        </view>
+        <view class="video-info">
+          <text class="video-title">{{item.title}}</text>
+          <text class="video-desc">{{item.description}}</text>
+          <text class="video-duration">{{item.durationText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Article 类型 -->
+    <view wx:if="{{board.type === 'article'}}" class="article-list">
+      <view 
+        class="article-item card" 
+        wx:for="{{articleList}}" 
+        wx:key="title"
+      >
+        <text class="article-title">{{item.title}}</text>
+        <text class="article-summary">{{item.summary}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">
+    <text>💡 具体问题请咨询 AI 专家</text>
+    <button class="ask-btn" bindtap="goToChat">立即咨询</button>
+  </view>
+</view>

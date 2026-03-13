@@ -1,0 +1,70 @@
+<!--pages/index/index.wxml - 修复版（移除图片）-->
+<view class="container">
+  <!-- 顶部欢迎区 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="title">AI 养生助手</text>
+      <text class="subtitle">专业食疗保健建议，让健康更简单</text>
+    </view>
+  </view>
+
+  <!-- 快速咨询入口 -->
+  <view class="quick-chat card" bindtap="goToChat">
+    <view class="quick-chat-left">
+      <view class="quick-chat-icon">🤖</view>
+      <view class="quick-chat-text">
+        <text class="quick-chat-title">立即咨询 AI 专家</text>
+        <text class="quick-chat-desc">智能问答，随时随地</text>
+      </view>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+
+  <!-- 功能板块 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">功能板块</text>
+    </view>
+    
+    <view class="boards">
+      <view 
+        class="board-item card fade-in" 
+        wx:for="{{boards}}" 
+        wx:key="_id"
+        bindtap="goToBoard"
+        data-code="{{item.code}}"
+      >
+        <view class="board-icon">{{item.iconText}}</view>
+        <view class="board-content">
+          <text class="board-title">{{item.title}}</text>
+          <text class="board-desc">{{item.description}}</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门问题推荐 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">热门问题</text>
+    </view>
+    
+    <view class="hot-questions">
+      <view 
+        class="question-tag" 
+        wx:for="{{hotQuestions}}" 
+        wx:key="index"
+        bindtap="askQuestion"
+        data-question="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部声明 -->
+  <view class="footer">
+    <text class="disclaimer">💡 本服务仅供参考，不替代医疗建议</text>
+  </view>
+</view>
