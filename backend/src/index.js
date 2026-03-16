@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// 初始化数据库
+const db = require('./database');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -14,7 +17,8 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '2.0.0',
+    database: 'connected'
   });
 });
 
@@ -38,6 +42,7 @@ app.listen(PORT, () => {
   console.log(`🚀 服务器运行在 http://localhost:${PORT}`);
   console.log(`📋 健康检查: http://localhost:${PORT}/health`);
   console.log(`🤖 GLM API: ${process.env.GLM_API_URL}`);
+  console.log(`💾 数据库: SQLite`);
 });
 
 module.exports = app;

@@ -1,9 +1,10 @@
-// pages/index/index.js - 修复版（添加 iconText）
+// pages/index/index.js
 const api = require('../../utils/api');
 const util = require('../../utils/util');
 
 Page({
   data: {
+    loading: true,
     boards: [],
     hotQuestions: [
       '最近总是失眠怎么办？',
@@ -15,11 +16,25 @@ Page({
   },
 
   onLoad() {
-    this.loadBoards();
+    this.loadData();
   },
 
   onShow() {
     // 每次显示页面时刷新数据
+  },
+
+  // 加载数据
+  async loadData() {
+    this.setData({ loading: true });
+    
+    try {
+      await this.loadBoards();
+    } catch (error) {
+      console.error('加载失败:', error);
+      util.showToast('加载失败，请重试');
+    } finally {
+      this.setData({ loading: false });
+    }
   },
 
   // 加载功能板块
@@ -43,7 +58,7 @@ Page({
       this.setData({ boards });
     } catch (error) {
       console.error('加载板块失败:', error);
-      util.showToast('加载失败，请重试');
+      throw error;
     }
   },
 
@@ -80,8 +95,19 @@ Page({
 
   // 下拉刷新
   onPullDownRefresh() {
-    this.loadBoards().then(() => {
+    this.loadData().then(() => {
+      wx.stopPullDownRefresh();
+      util.showToast('刷新成功', 'success');
+    }).catch(() => {
       wx.stopPullDownRefresh();
     });
+  },
+
+  // 分享
+  onShareAppMessage() {
+    return {
+      title: 'AI 养生助手 - 专业食疗保健建议',
+      path: '/pages/index/index'
+    };
   }
 });

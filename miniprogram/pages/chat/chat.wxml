@@ -1,97 +1,116 @@
-<!--pages/chat/chat.wxml - 修复版（移除图片）-->
-<view class="container">
+<!--pages/chat/chat.wxml-->
+<view class="chat-container">
   <!-- 消息列表 -->
   <scroll-view 
     class="message-list" 
     scroll-y 
-    scroll-into-view="{{scrollToView}}"
+    scroll-top="{{scrollTop}}"
     scroll-with-animation
   >
-    <view 
-      wx:for="{{messages}}" 
-      wx:key="id"
-      id="msg-{{index}}"
-      class="message-item fade-in"
-    >
+    <view wx:for="{{messages}}" wx:key="id" class="message-item {{item.type}}">
+      
       <!-- 用户消息 -->
-      <view class="msg-user" wx:if="{{item.role === 'user'}}">
-        <view class="msg-content user-msg">
+      <view wx:if="{{item.type === 'user'}}" class="user-message">
+        <view class="message-bubble">
           <text>{{item.content}}</text>
         </view>
-        <view class="avatar user-avatar">👤</view>
       </view>
 
       <!-- AI 消息 -->
-      <view class="msg-ai" wx:else>
-        <view class="avatar ai-avatar">🤖</view>
-        <view class="msg-content ai-msg">
-          <text class="answer-text">{{item.content}}</text>
-          
-          <!-- 图片 -->
-          <view class="images" wx:if="{{item.images.length > 0}}">
-            <image 
-              wx:for="{{item.images}}" 
-              wx:for-item="img"
-              wx:key="index"
-              src="{{img}}" 
-              class="answer-image"
-              mode="widthFix"
-              bindtap="previewImage"
-              data-url="{{img}}"
-            ></image>
+      <view wx:elif="{{item.type === 'ai'}}" class="ai-message">
+        <view class="ai-avatar">🐱</view>
+        <view class="message-content">
+          <!-- 文字回答 -->
+          <view class="message-bubble">
+            <text>{{item.content}}</text>
+            <view class="message-actions">
+              <text class="action-btn" bindtap="copyMessage" data-content="{{item.content}}">
+                📋 复制
+              </text>
+            </view>
           </view>
-          
-          <!-- 商品推荐 -->
-          <view class="products" wx:if="{{item.products.length > 0}}">
-            <view class="products-title">💡 相关推荐</view>
+
+          <!-- 配图展示 -->
+          <view wx:if="{{item.images.length > 0}}" class="image-container">
             <view 
+              wx:for="{{item.images}}" 
+              wx:for-item="image" 
+              wx:key="url" 
+              class="image-item"
+            >
+              <image 
+                src="{{image.url}}" 
+                mode="aspectFit"
+                bindtap="previewImage"
+                data-url="{{image.url}}"
+              />
+              <text class="image-caption">{{image.caption}}</text>
+            </view>
+          </view>
+
+          <!-- 商品推荐卡片 -->
+          <view wx:if="{{item.products.length > 0}}" class="products-container">
+            <view class="products-title">🎁 相关推荐</view>
+            <view 
+              wx:for="{{item.products}}" 
+              wx:for-item="product" 
+              wx:key="id" 
               class="product-card"
-              wx:for="{{item.products}}"
-              wx:for-item="product"
-              wx:key="id"
               bindtap="goToProduct"
               data-product="{{product}}"
             >
-              <view class="product-image">🛍️</view>
+              <image src="{{product.image}}" class="product-image" mode="aspectFill"/>
               <view class="product-info">
                 <text class="product-name">{{product.name}}</text>
-                <text class="product-desc">{{product.description}}</text>
                 <text class="product-price">¥{{product.price}}</text>
+              </view>
+              <view class="product-action">
+                <text>去购买 →</text>
               </view>
             </view>
           </view>
-          
-          <!-- 免责声明 -->
-          <text class="disclaimer">💡 仅供参考，不替代医疗建议</text>
+
+          <!-- 时间戳 -->
+          <text class="message-time">{{item.timestamp}}</text>
+        </view>
+      </view>
+
+      <!-- 错误消息 -->
+      <view wx:elif="{{item.type === 'error'}}" class="error-message">
+        <view class="message-bubble error">
+          <text>❌ {{item.content}}</text>
         </view>
       </view>
     </view>
-    
-    <!-- 空状态 -->
-    <view class="empty-state" wx:if="{{messages.length === 0}}">
-      <view class="empty-image">💬</view>
-      <text class="empty-text">有什么健康问题想问我？</text>
-      <text class="empty-hint">例如：最近总是失眠怎么办？</text>
+
+    <!-- 加载状态 -->
+    <view wx:if="{{loading}}" class="loading-message">
+      <view class="ai-avatar">🐱</view>
+      <view class="loading-dots">
+        <text>.</text>
+        <text>.</text>
+        <text>.</text>
+      </view>
     </view>
   </scroll-view>
 
-  <!-- 输入区域 -->
-  <view class="input-area">
+  <!-- 输入框 -->
+  <view class="input-container">
     <input 
-      class="input-field"
-      bindconfirm="sendMessage"
-      bindinput="onInput"
-      value="{{inputText}}"
-      placeholder="输入您的问题..."
+      class="message-input"
+      type="text"
+      placeholder="请输入您的健康问题..."
+      value="{{inputValue}}"
+      bindinput="onInputChange"
       confirm-type="send"
-      adjust-position="{{true}}"
+      bindconfirm="sendQuestion"
     />
     <button 
-      class="send-btn {{inputText ? 'active' : ''}}" 
-      bindtap="sendMessage"
-      disabled="{{!inputText || sending}}"
+      class="send-button {{inputValue ? 'active' : ''}}"
+      bindtap="sendQuestion"
+      disabled="{{loading || !inputValue}}"
     >
-      {{sending ? '发送中' : '发送'}}
+      发送
     </button>
   </view>
 </view>

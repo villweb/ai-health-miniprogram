@@ -1,135 +1,202 @@
-// pages/chat/chat.js
-const api = require('../../utils/api');
-const util = require('../../utils/util');
+/**
+ * AI 对话优化 - 小程序前端
+ * 优化点：
+ * 1. 展示图片
+ * 2. 商品卡片展示
+ * 3. 小程序跳转
+ */
 
+// pages/chat/chat.js
 Page({
   data: {
-    messages: [],
-    inputText: '',
-    scrollToView: '',
-    sending: false
+    messages: [], // 消息列表
+    inputValue: '', // 输入框内容
+    loading: false, // 加载状态
+    scrollTop: 0 // 滚动位置
   },
 
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad(options) {
-    // 如果从首页带问题过来
+    // 可以从参数获取初始问题
     if (options.question) {
-      this.setData({ inputText: options.question });
-      this.sendMessage();
+      this.sendQuestion(options.question);
     }
   },
 
-  onShow() {
-    // 页面显示时滚动到底部
-    this.scrollToBottom();
+  /**
+   * 输入框内容变化
+   */
+  onInputChange(e) {
+    this.setData({
+      inputValue: e.detail.value
+    });
   },
 
-  // 输入框变化
-  onInput(e) {
-    this.setData({ inputText: e.detail.value });
-  },
-
-  // 发送消息
-  async sendMessage() {
-    const question = this.data.inputText.trim();
-    if (!question || this.data.sending) return;
+  /**
+   * 发送问题
+   */
+  async sendQuestion(question) {
+    const input = question || this.data.inputValue.trim();
+    
+    if (!input) {
+      wx.showToast({
+        title: '请输入问题',
+        icon: 'none'
+      });
+      return;
+    }
 
     // 添加用户消息
-    const userMsg = {
+    const userMessage = {
       id: Date.now(),
-      role: 'user',
-      content: question
+      type: 'user',
+      content: input,
+      timestamp: new Date().toLocaleTimeString()
     };
 
     this.setData({
-      messages: [...this.data.messages, userMsg],
-      inputText: '',
-      sending: true
+      messages: [...this.data.messages, userMessage],
+      inputValue: '',
+      loading: true
     });
 
+    // 滚动到底部
     this.scrollToBottom();
 
     try {
-      // 调用 AI 接口
-      const data = await api.chat(question);
+      // 调用后端 API
+      const res = await wx.request({
+        url: 'https://your-backend.com/api/chat',
+        method: 'POST',
+        data: {
+          question: input,
+          userId: wx.getStorageSync('userId') || 'anonymous'
+        }
+      });
+
+      if (res.data.success) {
+        const { answer, images, products } = res.data.data;
+
+        // 添加 AI 回复消息
+        const aiMessage = {
+          id: Date.now() + 1,
+          type: 'ai',
+          content: answer,
+          images: images || [],
+          products: products || [],
+          timestamp: new Date().toLocaleTimeString()
+        };
+
+        this.setData({
+          messages: [...this.data.messages, aiMessage],
+          loading: false
+        });
+
+        this.scrollToBottom();
+      } else {
+        throw new Error(res.data.message);
+      }
+    } catch (error) {
+      console.error('发送失败:', error);
       
-      // 添加 AI 消息
-      const aiMsg = {
+      // 添加错误消息
+      const errorMessage = {
         id: Date.now() + 1,
-        role: 'assistant',
-        content: data.answer,
-        images: data.images || [],
-        products: data.recommendedProducts || []
+        type: 'error',
+        content: '抱歉，服务暂时不可用，请稍后再试',
+        timestamp: new Date().toLocaleTimeString()
       };
 
       this.setData({
-        messages: [...this.data.messages, aiMsg],
-        sending: false
-      });
-
-      this.scrollToBottom();
-
-    } catch (error) {
-      console.error('对话失败:', error);
-      util.showToast('对话失败，请重试');
-      this.setData({ sending: false });
-    }
-  },
-
-  // 快速提问（从首页调用）
-  quickAsk(question) {
-    this.setData({ inputText: question });
-    this.sendMessage();
-  },
-
-  // 滚动到底部
-  scrollToBottom() {
-    const length = this.data.messages.length;
-    if (length > 0) {
-      this.setData({
-        scrollToView: `msg-${length - 1}`
+        messages: [...this.data.messages, errorMessage],
+        loading: false
       });
     }
   },
 
-  // 预览图片
+  /**
+   * 预览图片
+   */
   previewImage(e) {
-    const url = e.currentTarget.dataset.url;
+    const { url } = e.currentTarget.dataset;
     wx.previewImage({
       current: url,
       urls: [url]
     });
   },
 
-  // 跳转商品
+  /**
+   * 点击商品卡片 - 跳转到商品小程序
+   */
   goToProduct(e) {
-    const product = e.currentTarget.dataset.product;
+    const { product } = e.currentTarget.dataset;
     
-    // 记录点击
-    api.recordProductClick(product.id);
-
-    // 跳转小程序
-    if (product.miniprogramAppId) {
-      wx.navigateToMiniProgram({
-        appId: product.miniprogramAppId,
-        path: product.pagePath,
-        success: () => {
-          console.log('跳转成功');
-        },
-        fail: (err) => {
-          console.error('跳转失败:', err);
-          util.showToast('跳转失败，请稍后重试');
-        }
-      });
-    } else {
-      util.showToast('商品链接配置中');
-    }
+    wx.navigateToMiniProgram({
+      appId: product.appId, // 商品小程序 AppID
+      path: product.path, // 商品详情页路径
+      success: (res) => {
+        console.log('跳转成功:', product.name);
+        
+        // 可以记录用户点击行为
+        this.trackProductClick(product);
+      },
+      fail: (err) => {
+        console.error('跳转失败:', err);
+        wx.showToast({
+          title: '跳转失败，请稍后再试',
+          icon: 'none'
+        });
+      }
+    });
   },
 
-  // 分享
-  onShareAppMessage() {
-    return {
-      title: 'AI 养生助手 - 专业食疗保健建议',
-      path: '/pages/index/index'
-    };
+  /**
+   * 记录商品点击（可选）
+   */
+  trackProductClick(product) {
+    wx.request({
+      url: 'https://your-backend.com/api/track/click',
+      method: 'POST',
+      data: {
+        productId: product.id,
+        productName: product.name,
+        userId: wx.getStorageSync('userId') || 'anonymous',
+        timestamp: new Date().toISOString()
+      }
+    });
+  },
+
+  /**
+   * 滚动到底部
+   */
+  scrollToBottom() {
+    wx.createSelectorQuery()
+      .select('.message-list')
+      .boundingClientRect((rect) => {
+        if (rect) {
+          this.setData({
+            scrollTop: rect.height
+          });
+        }
+      })
+      .exec();
+  },
+
+  /**
+   * 复制消息内容
+   */
+  copyMessage(e) {
+    const { content } = e.currentTarget.dataset;
+    wx.setClipboardData({
+      data: content,
+      success: () => {
+        wx.showToast({
+          title: '已复制',
+          icon: 'success'
+        });
+      }
+    });
   }
 });

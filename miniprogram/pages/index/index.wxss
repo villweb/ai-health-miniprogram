@@ -1,8 +1,53 @@
-/* pages/index/index.wxss - 修复版 */
+/* pages/index/index.wxss - 优化版 */
 
 .container {
   padding: 0;
   padding-bottom: 20rpx;
+}
+
+/* 骨架屏 */
+.skeleton-wrapper {
+  padding: 20rpx;
+}
+
+.skeleton-header {
+  height: 300rpx;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.skeleton-quick-chat {
+  height: 120rpx;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 16rpx;
+  margin: -40rpx 20rpx 20rpx;
+}
+
+.skeleton-section {
+  margin: 30rpx 0;
+}
+
+.skeleton-item {
+  height: 140rpx;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
 }
 
 /* 顶部欢迎区 */
@@ -153,10 +198,12 @@
   font-size: 26rpx;
   color: #666;
   border: 1rpx solid #e0e0e0;
+  transition: all 0.3s;
 }
 
 .question-tag:active {
   background-color: #f5f5f5;
+  transform: scale(0.98);
 }
 
 /* 底部声明 */
@@ -169,4 +216,20 @@
 .disclaimer {
   font-size: 24rpx;
   color: #999;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
 }

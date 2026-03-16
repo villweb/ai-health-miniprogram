@@ -1,4 +1,4 @@
-// utils/api.js - API 封装
+// utils/api.js - API 封装（支持流式输出）
 
 const app = getApp();
 
@@ -31,13 +31,69 @@ function request(url, method = 'GET', data = {}) {
 }
 
 /**
- * AI 对话
+ * AI 对话（非流式）
  */
 function chat(question) {
   return request('/chat', 'POST', {
     question,
     userId: app.globalData.userId
   });
+}
+
+/**
+ * AI 对话（流式输出）
+ * @param {string} question - 问题
+ * @param {function} onMessage - 接收到消息的回调
+ * @param {function} onDone - 完成的回调
+ * @param {function} onError - 错误的回调
+ */
+function chatStream(question, onMessage, onDone, onError) {
+  const requestTask = wx.request({
+    url: `${app.globalData.apiBaseUrl}/chat/stream`,
+    method: 'POST',
+    data: {
+      question,
+      userId: app.globalData.userId
+    },
+    header: {
+      'Content-Type': 'application/json',
+      'userId': app.globalData.userId
+    },
+    enableChunked: true, // 启用分块传输
+    success: (res) => {
+      if (res.statusCode === 200) {
+        // 解析 SSE 数据
+        const lines = res.data.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.substring(6);
+            
+            if (data === '[DONE]') {
+              onDone && onDone();
+              break;
+            }
+            
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                onMessage && onMessage(parsed.content);
+              }
+            } catch (e) {
+              console.error('Parse error:', e);
+            }
+          }
+        }
+      } else {
+        onError && onError(new Error('请求失败'));
+      }
+    },
+    fail: (err) => {
+      console.error('Stream error:', err);
+      onError && onError(err);
+    }
+  });
+  
+  return requestTask;
 }
 
 /**
@@ -78,6 +134,7 @@ function recordProductClick(productId) {
 module.exports = {
   request,
   chat,
+  chatStream,
   getBoards,
   getBoardDetail,
   getProducts,
