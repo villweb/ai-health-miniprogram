@@ -124,7 +124,7 @@ MIT
 
 ## 作者
 
-CodeLynx 🦞
+May
 
 ## 致谢
 

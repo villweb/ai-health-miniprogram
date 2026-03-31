@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "keywords": ["ai", "health", "miniprogram"],
-  "author": "CodeLynx",
+  "author": "May",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
